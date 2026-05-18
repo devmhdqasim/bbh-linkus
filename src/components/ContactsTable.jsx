@@ -3,9 +3,10 @@ import { Phone, Plus, X, User, Users, Mail, StickyNote, AlertCircle, Pencil } fr
 import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input'
 import 'react-phone-number-input/style.css'
 import { useLinkus } from '../hooks/useLinkus'
+import { CallConfirmModal, CallErrorModal } from './CallConfirmModal'
 
 const INITIAL_CONTACTS = [
-  { id: 1, name: 'Muhammad Qasim', phone: '+964 770 482 1936', email: 'qasim@bbh.com', notes: '' },
+  { id: 1, name: 'Ali Jawad', phone: '+964 770 482 1936', email: 'ali.jawad@bbh.com', notes: '' },
   { id: 2, name: 'Sara Khan', phone: '+964 781 654 2708', email: 'sara@bbh.com', notes: '' },
   { id: 3, name: 'Omar Ali', phone: '+964 750 918 4362', email: '', notes: '' },
 ]
@@ -67,6 +68,9 @@ export function ContactsTable() {
   const [newNotes, setNewNotes] = useState('')
   const [errors, setErrors] = useState({})
   const [touched, setTouched] = useState({})
+
+  const [callTarget, setCallTarget] = useState(null) // { name, phone }
+  const [callError, setCallError] = useState(null) // 'not-registered' | 'failed'
 
   const isDisabled = registerState !== 'registered'
 
@@ -203,9 +207,19 @@ export function ContactsTable() {
     closeDrawer()
   }
 
-  function handleCall(phone) {
-    if (isDisabled) return
-    makeCall(phone)
+  function requestCall(name, phone) {
+    setCallTarget({ name, phone })
+  }
+
+  function confirmCall() {
+    if (!callTarget) return
+    if (isDisabled) {
+      setCallTarget(null)
+      setCallError('not-registered')
+      return
+    }
+    makeCall(callTarget.phone)
+    setCallTarget(null)
   }
 
   function hasFieldError(field) {
@@ -277,10 +291,9 @@ export function ContactsTable() {
                   <Pencil size={13} />
                 </button>
                 <button
-                  onClick={() => handleCall(contact.phone)}
-                  disabled={isDisabled}
-                  className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors duration-200 active:scale-[0.94] disabled:opacity-30 disabled:cursor-not-allowed"
-                  title={isDisabled ? 'Phone not registered' : `Call ${contact.name || contact.phone}`}
+                  onClick={() => requestCall(contact.name, contact.phone)}
+                  className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors duration-200 active:scale-[0.94]"
+                  title={`Call ${contact.name || contact.phone}`}
                 >
                   <Phone size={12} />
                   Call
@@ -502,6 +515,24 @@ export function ContactsTable() {
           </div>
         </div>
       </div>
+
+      {/* Call confirmation modal */}
+      {callTarget && (
+        <CallConfirmModal
+          name={callTarget.name}
+          number={callTarget.phone}
+          onConfirm={confirmCall}
+          onClose={() => setCallTarget(null)}
+        />
+      )}
+
+      {/* Call error modal */}
+      {callError && (
+        <CallErrorModal
+          errorType={callError}
+          onClose={() => setCallError(null)}
+        />
+      )}
     </>
   )
 }

@@ -7,6 +7,7 @@ import { ContactsTable } from './components/ContactsTable'
 import { ActiveCall } from './components/ActiveCall'
 import { IncomingCallModal } from './components/IncomingCallModal'
 import { CallHistory } from './components/CallHistory'
+import { Sidebar } from './components/Sidebar'
 import { useLinkus } from './hooks/useLinkus'
 
 function MicPermissionBanner() {
@@ -53,32 +54,49 @@ function MainContent() {
               <h1 className="text-[15px] font-semibold text-white tracking-tight">
                 BBH Linkus
               </h1>
-              <p className="text-[11px] text-gray-500">Softphone</p>
+              <p className="text-[11px] text-gray-500">Sales Communication Hub</p>
             </div>
           </div>
-          <RegistrationStatus />
+
+          <div className="flex items-center gap-4">
+            <RegistrationStatus />
+            <div className="hidden sm:flex items-center gap-3 pl-4 border-l border-white/[0.08]">
+              <div className="text-right leading-tight">
+                <p className="text-[13px] font-medium text-white">Muhammad Qasim</p>
+                <p className="text-[11px] text-brand-gold">Sales Agent</p>
+              </div>
+              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-brand-gold/30 to-brand-gold/10 border border-brand-gold/20 flex items-center justify-center">
+                <span className="text-[11px] font-bold text-brand-gold">MQ</span>
+              </div>
+            </div>
+          </div>
         </div>
       </header>
 
-      {/* Content */}
-      <div className="px-5 py-5 md:px-8 md:py-6">
-        <DisconnectedBanner />
-        <MicPermissionBanner />
+      {/* Layout: Sidebar + Content */}
+      <div className="flex">
+        <Sidebar />
 
-        {/* Active Call */}
-        {callStatus !== 'idle' && (
+        {/* Main Content */}
+        <div className="flex-1 min-w-0 px-5 py-5 md:px-8 md:py-6">
+          <DisconnectedBanner />
+          <MicPermissionBanner />
+
+          {/* Active Call */}
+          {callStatus !== 'idle' && (
+            <div className="mb-5">
+              <ActiveCall />
+            </div>
+          )}
+
+          {/* Contacts Table */}
           <div className="mb-5">
-            <ActiveCall />
+            <ContactsTable />
           </div>
-        )}
 
-        {/* Contacts Table */}
-        <div className="mb-5">
-          <ContactsTable />
+          {/* Call History */}
+          <CallHistory />
         </div>
-
-        {/* Call History */}
-        <CallHistory />
       </div>
 
       {/* Incoming call modal */}
