@@ -6,7 +6,7 @@ import { useLinkus } from '../hooks/useLinkus'
 import { CallConfirmModal, CallErrorModal } from './CallConfirmModal'
 
 const INITIAL_CONTACTS = [
-  { id: 1, name: 'Ali Jawad', phone: '+964 770 482 1936', email: 'ali.jawad@bbh.com', notes: '' },
+  { id: 1, name: 'Ali Jawad', phone: '+92 306 061 3772', email: 'ali.jawad@bbh.com', notes: '' },
   { id: 2, name: 'Sara Khan', phone: '+964 781 654 2708', email: 'sara@bbh.com', notes: '' },
   { id: 3, name: 'Omar Ali', phone: '+964 750 918 4362', email: '', notes: '' },
 ]

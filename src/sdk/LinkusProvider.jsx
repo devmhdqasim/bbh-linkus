@@ -48,10 +48,11 @@ export function LinkusProvider({ children }) {
 
     async function initSDK() {
       try {
-        const { phoneOperator, pbxOperator, destroy } = await linkusInit({
+        const { phone: phoneOperator, pbx: pbxOperator, destroy } = await linkusInit({
           username,
           secret,
           pbxURL,
+          enableLog: true,
         })
 
         if (cancelled) {
@@ -141,7 +142,8 @@ export function LinkusProvider({ children }) {
           })
         })
       } catch (err) {
-        console.error('Linkus SDK init failed:', err)
+        console.error('Linkus SDK init failed:', err?.message || err?.code || err)
+        console.error('Full error:', JSON.stringify(err, null, 2))
         toast.error('Failed to initialize phone system')
       }
     }
